@@ -103,7 +103,7 @@ async function run() {
         return removeLabel(client, issue_number, label)
       }));
     }
-  } catch (error) {
+  } catch (error: any) {
     core.error(error);
     core.setFailed(error.message);
   }
