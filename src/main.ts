@@ -3,6 +3,8 @@ import * as github from '@actions/github';
 import * as yaml from 'js-yaml';
 
 async function run() {
+  console.log("Running version 1.1");
+
   try {
     // Configuration parameters
     var configPath = core.getInput('configuration-path', { required: true });
