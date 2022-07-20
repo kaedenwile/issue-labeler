@@ -91,15 +91,15 @@ async function run() {
     }
     if (addLabel.length > 0) {
       console.log(`Adding labels ${addLabel.toString()} to issue #${issue_number}`)
-      addLabels(client, issue_number, addLabel)
+      await addLabels(client, issue_number, addLabel)
     }
 
     if (syncLabels) {
       console.log("SYNCING LABELS"); // TODO
-      removeLabelItems.forEach(function (label, index) {
+      await Promise.all(removeLabelItems.map(function (label) {
         console.log(`Removing label ${label} from issue #${issue_number}`)
-        removeLabel(client, issue_number, label)
-      });
+        return removeLabel(client, issue_number, label)
+      }));
     }
   } catch (error) {
     core.error(error);
