@@ -3,8 +3,6 @@ import * as github from '@actions/github';
 import * as yaml from 'js-yaml';
 
 async function run() {
-  console.log("Running version 1.1");
-
   try {
     // Configuration parameters
     var configPath = core.getInput('configuration-path', { required: true });
@@ -14,7 +12,7 @@ async function run() {
     const notBefore = Date.parse(core.getInput('not-before', { required: false }));
     const bodyMissingRegexLabel = core.getInput('body-missing-regex-label', { required: false });
     const includeTitle = parseInt(core.getInput('include-title', { required: false }));
-    const syncLabels = parseInt(core.getInput('sync-labels', { required: false }) || "1");
+    const syncLabels = parseInt(core.getInput('sync-labels', { required: false }));
 
     const issue_number = getIssueOrPullRequestNumber();
     if (issue_number === undefined) {
@@ -93,17 +91,16 @@ async function run() {
     }
     if (addLabel.length > 0) {
       console.log(`Adding labels ${addLabel.toString()} to issue #${issue_number}`)
-      await addLabels(client, issue_number, addLabel)
+      addLabels(client, issue_number, addLabel)
     }
 
     if (syncLabels) {
-      console.log("SYNCING LABELS"); // TODO
-      await Promise.all(removeLabelItems.map(function (label) {
+      removeLabelItems.forEach(function (label, index) {
         console.log(`Removing label ${label} from issue #${issue_number}`)
-        return removeLabel(client, issue_number, label)
-      }));
+        removeLabel(client, issue_number, label)
+      });
     }
-  } catch (error: any) {
+  } catch (error) {
     core.error(error);
     core.setFailed(error.message);
   }
